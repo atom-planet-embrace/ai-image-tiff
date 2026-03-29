@@ -1,6 +1,8 @@
 //! All IO functionality needed for TIFF decoding
 #[cfg(any(feature = "fax", feature = "webp", test))]
 use alloc::vec::Vec;
+#[cfg(any(feature = "webp", test))]
+use alloc::vec;
 #[cfg(feature = "webp")]
 use no_std_io::io::Cursor;
 use no_std_io::io::{self, Read, Seek, Take};
@@ -374,8 +376,10 @@ impl WebPReader {
         compressed_length: u64,
         samples: u16,
     ) -> crate::TiffResult<Self> {
+        let mut compressed = Vec::new();
+        reader.take(compressed_length).read_to_end(&mut compressed)?;
         let mut decoder =
-            image_webp::WebPDecoder::new(BufReader::new(reader.take(compressed_length)))
+            image_webp::WebPDecoder::new(Cursor::new(compressed))
                 .map_err(|_e| io::Error::new(io::ErrorKind::InvalidData, "webp decode error"))?;
 
         if !(samples == 4 || (samples == 3 && !decoder.has_alpha())) {

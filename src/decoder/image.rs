@@ -549,11 +549,13 @@ impl Image {
             CompressionMethod::ZSTD => {
                 let mut compressed = alloc::vec::Vec::new();
                 reader.take(compressed_length).read_to_end(&mut compressed)?;
-                let mut decoder = ruzstd::decoding::StreamingDecoder::new(&compressed[..])
-                    .map_err(|_e| io::Error::new(io::ErrorKind::InvalidData, "zstd decode init error"))?;
-                let mut output = Vec::new();
-                ruzstd::io::Read::read_to_end(&mut decoder, &mut output)
-                    .map_err(|_e| io::Error::new(io::ErrorKind::InvalidData, "zstd decode error"))?;
+                let mut source = &compressed[..];
+                let mut decoder = ruzstd::FrameDecoder::new();
+                decoder.reset(&mut source)
+                    .map_err(|_e| no_std_io::io::Error::new(no_std_io::io::ErrorKind::InvalidData, "zstd decode init error"))?;
+                decoder.decode_blocks(&mut source, ruzstd::BlockDecodingStrategy::All)
+                    .map_err(|_e| no_std_io::io::Error::new(no_std_io::io::ErrorKind::InvalidData, "zstd decode error"))?;
+                let output = decoder.collect().unwrap_or_default();
                 Box::new(Cursor::new(output))
             }
             CompressionMethod::PackBits => Box::new(PackBitsReader::new(reader, compressed_length)),
