@@ -1,3 +1,4 @@
+extern crate ai_tiff as tiff;
 use tiff::decoder::{Decoder, DecodingResult, Limits, TiffCodingUnit};
 
 use std::fs::File;

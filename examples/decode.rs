@@ -1,4 +1,4 @@
-use tiff::decoder::{BufferLayoutPreference, Decoder, DecodingBuffer, DecodingResult};
+use ai_tiff::decoder::{BufferLayoutPreference, Decoder, DecodingBuffer, DecodingResult};
 
 fn main() -> Result<(), Box<dyn std::error::Error>> {
     let Some(image) = std::env::args_os().nth(1) else {
@@ -33,17 +33,17 @@ fn debug_planes(
     index: u32,
     data: &mut DecodingResult,
     layout: &BufferLayoutPreference,
-    colortype: &tiff::ColorType,
+    colortype: &ai_tiff::ColorType,
     (width, height): (u32, u32),
 ) {
     let (depth, mut tupltype) = match colortype {
         // Note: we will expand, so this is in fact not BLACKANDWHITE
-        tiff::ColorType::Gray(_) => (1, "GRAYSCALE"),
-        tiff::ColorType::RGB(_) => (3, "RGB"),
-        tiff::ColorType::RGBA(_) => (4, "RGB_ALPHA"),
-        tiff::ColorType::Palette(_) => (1, "PALETTE"),
-        tiff::ColorType::CMYK(_) => (4, "CMYK"),
-        tiff::ColorType::Multiband { num_samples: 2, .. } => (2, "GRAYSCALE_ALPHA"),
+        ai_tiff::ColorType::Gray(_) => (1, "GRAYSCALE"),
+        ai_tiff::ColorType::RGB(_) => (3, "RGB"),
+        ai_tiff::ColorType::RGBA(_) => (4, "RGB_ALPHA"),
+        ai_tiff::ColorType::Palette(_) => (1, "PALETTE"),
+        ai_tiff::ColorType::CMYK(_) => (4, "CMYK"),
+        ai_tiff::ColorType::Multiband { num_samples: 2, .. } => (2, "GRAYSCALE_ALPHA"),
         _ => {
             eprintln!("Unsupported color type for PAM output: {:?}", colortype);
             return;

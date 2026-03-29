@@ -1433,7 +1433,7 @@ impl<R: Read + Seek> Decoder<R> {
     /// read:
     ///
     /// ```
-    /// use tiff::decoder::{Decoder, DecodingResult};
+    /// use ai_tiff::decoder::{Decoder, DecodingResult};
     /// let mut result = DecodingResult::U8(vec![]);
     ///
     /// let mut reader = /* */
@@ -1446,13 +1446,13 @@ impl<R: Read + Seek> Decoder<R> {
     ///    println!("Only the first plane was read");
     /// }
     ///
-    /// # Ok::<_, tiff::TiffError>(())
+    /// # Ok::<_, ai_tiff::TiffError>(())
     /// ```
     ///
     /// # Examples
     ///
     /// ```
-    /// use tiff::decoder::{Decoder, DecodingResult, Limits};
+    /// use ai_tiff::decoder::{Decoder, DecodingResult, Limits};
     ///
     /// let mut result = DecodingResult::I8(vec![]);
     ///
@@ -1463,7 +1463,7 @@ impl<R: Read + Seek> Decoder<R> {
     ///
     /// reader.read_image_to_buffer(&mut result)?;
     ///
-    /// # Ok::<_, tiff::TiffError>(())
+    /// # Ok::<_, ai_tiff::TiffError>(())
     /// ```
     pub fn read_image_to_buffer(
         &mut self,
@@ -1556,8 +1556,8 @@ impl<R: Read + Seek> Decoder<R> {
     /// read with [`Decoder::read_directory`].
     ///
     /// ```no_run
-    /// use tiff::decoder::Decoder;
-    /// use tiff::tags::Tag;
+    /// use ai_tiff::decoder::Decoder;
+    /// use ai_tiff::tags::Tag;
     ///
     /// # use std::io::Cursor;
     /// # let mut data = Cursor::new(vec![0]);
@@ -1570,7 +1570,7 @@ impl<R: Read + Seek> Decoder<R> {
     ///     // omitted: handle the subfiles, e.g. thumbnails
     /// }
     ///
-    /// # Ok::<_, tiff::TiffError>(())
+    /// # Ok::<_, ai_tiff::TiffError>(())
     /// ```
     pub fn read_directory_tags<'ifd>(&'ifd mut self, ifd: &'ifd Directory) -> IfdDecoder<'ifd> {
         IfdDecoder {

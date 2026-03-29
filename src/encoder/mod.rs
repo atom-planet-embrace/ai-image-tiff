@@ -85,11 +85,11 @@ impl Compression {
 ///
 /// # Examples
 /// ```
-/// # extern crate ai_tiff as tiff;
+/// # extern crate ai_tiff;
 /// # fn main() {
 /// # let mut file = std::io::Cursor::new(Vec::new());
 /// # let image_data = vec![0; 100*100*3];
-/// use tiff::encoder::*;
+/// use ai_tiff::encoder::*;
 ///
 /// // create a standard Tiff file
 /// let mut tiff = TiffEncoder::new(&mut file).unwrap();
@@ -590,12 +590,12 @@ impl<'a, W: Write + Seek, K: TiffKind> Drop for DirectoryEncoder<'a, W, K> {
 ///
 /// # Examples
 /// ```
-/// # extern crate ai_tiff as tiff;
+/// # extern crate ai_tiff;
 /// # fn main() {
 /// # let mut file = std::io::Cursor::new(Vec::new());
 /// # let image_data = vec![0; 100*100*3];
-/// use tiff::encoder::*;
-/// use tiff::tags::Tag;
+/// use ai_tiff::encoder::*;
+/// use ai_tiff::tags::Tag;
 ///
 /// let mut tiff = TiffEncoder::new(&mut file).unwrap();
 /// let mut image = tiff.new_image::<colortype::RGB8>(100, 100).unwrap();
@@ -1008,7 +1008,7 @@ impl<K: TiffKind> DirectoryOffset<K> {
     /// directory, i.e. have the library overwrite its `next` field.
     ///
     /// ```
-    /// use tiff::{
+    /// use ai_tiff::{
     ///     encoder::{TiffEncoder, DirectoryOffset},
     ///     Directory,
     ///     tags::IfdPointer,
@@ -1029,7 +1029,7 @@ impl<K: TiffKind> DirectoryOffset<K> {
     /// chain.set_parent(&reconstructed);
     /// chain.finish_with_offsets()?;
     ///
-    /// # Ok::<_, tiff::TiffError>(())
+    /// # Ok::<_, ai_tiff::TiffError>(())
     /// ```
     pub fn new(pointer: IfdPointer, dir: &Directory) -> TiffResult<Self> {
         let offset = K::convert_offset(pointer.0)?;
