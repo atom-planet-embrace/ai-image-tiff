@@ -1,7 +1,9 @@
 //! All IO functionality needed for TIFF decoding
+use alloc::vec::Vec;
 #[cfg(feature = "webp")]
-use std::io::Cursor;
-use std::io::{self, BufRead, BufReader, Read, Seek, Take};
+use no_std_io::io::Cursor;
+use no_std_io::io::{self, BufRead, Read, Seek, Take};
+use crate::compat::BufReader;
 
 pub use crate::tags::ByteOrder;
 
@@ -178,7 +180,7 @@ impl<R: Read> Read for LZWReader<R> {
                 Ok(weezl::LzwStatus::Done) => {
                     return Ok(result.consumed_out);
                 }
-                Err(err) => return Err(io::Error::new(io::ErrorKind::InvalidData, err)),
+                Err(_err) => return Err(io::Error::new(io::ErrorKind::InvalidData, "lzw decode error")),
             }
         }
     }
@@ -258,7 +260,7 @@ impl<R: Read> Read for PackBitsReader<R> {
 
 #[cfg(feature = "fax")]
 pub struct Group4Reader<R: Read> {
-    decoder: fax34::decoder::Group4Decoder<io::Bytes<io::BufReader<io::Take<R>>>>,
+    decoder: fax34::decoder::Group4Decoder<io::Bytes<BufReader<io::Take<R>>>>,
     line_buf: io::Cursor<Vec<u8>>,
     height: u16,
     width: u16,
@@ -277,7 +279,7 @@ impl<R: Read> Group4Reader<R> {
 
         Ok(Self {
             decoder: fax34::decoder::Group4Decoder::new(
-                io::BufReader::new(reader.take(compressed_length)).bytes(),
+                BufReader::new(reader.take(compressed_length)).bytes(),
                 width,
             )?,
             line_buf: io::Cursor::new(Vec::with_capacity(width.into())),
@@ -295,7 +297,7 @@ impl<R: Read> Read for Group4Reader<R> {
         if self.line_buf.position() as usize == self.line_buf.get_ref().len()
             && self.y < self.height
         {
-            let next = self.decoder.advance().map_err(std::io::Error::other)?;
+            let next = self.decoder.advance().map_err(|_e| no_std_io::io::Error::new(no_std_io::io::ErrorKind::Other, "fax decode error"))?;
 
             match next {
                 fax34::decoder::DecodeStatus::End => (),
@@ -369,8 +371,8 @@ impl WebPReader {
         samples: u16,
     ) -> crate::TiffResult<Self> {
         let mut decoder =
-            image_webp::WebPDecoder::new(io::BufReader::new(reader.take(compressed_length)))
-                .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
+            image_webp::WebPDecoder::new(BufReader::new(reader.take(compressed_length)))
+                .map_err(|_e| io::Error::new(io::ErrorKind::InvalidData, "webp decode error"))?;
 
         if !(samples == 4 || (samples == 3 && !decoder.has_alpha())) {
             return Err(io::Error::new(
@@ -386,7 +388,7 @@ impl WebPReader {
 
         decoder
             .read_image(&mut data)
-            .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
+            .map_err(|_e| io::Error::new(io::ErrorKind::InvalidData, "webp image read error"))?;
 
         // Add a fully opaque alpha channel if needed
         if samples == 4 && !decoder.has_alpha() {

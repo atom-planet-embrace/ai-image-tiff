@@ -1,3 +1,4 @@
+use alloc::{vec, vec::Vec};
 use crate::encoder::TiffValue;
 use core::fmt;
 
@@ -163,7 +164,7 @@ pub enum Tag(u16) unknown(
 /// This is represented as a 64-bit integer but only BigTIFF can utilize the bits. It is encoded
 /// as 32-bit unsigned value ([`Type::LONG`]) in regular TIFF files and as 64-bit unsigned value
 /// ([`Type::IFD8`]) in BigTIFF files.
-#[derive(Clone, Copy, PartialEq, Eq, Debug, Hash)]
+#[derive(Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Debug, Hash)]
 // We could be using `NonZeroU64` here but I find that this complicates semantics. This type
 // represents the integer value stored as a value in a tag. The semantics of treating `0` as an end
 // marker are imposed by the IFD. (It's unclear if Pointer tags such as Exif would allow `0` but in

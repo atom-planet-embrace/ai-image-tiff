@@ -1,8 +1,8 @@
-use std::io;
-use std::str;
-use std::string;
+use alloc::{string, string::String, string::ToString, vec::Vec};
+use no_std_io::io;
+use core::str;
 
-use quick_error::quick_error;
+use quick_error::ai_quick_error;
 
 use crate::decoder::ChunkType;
 use crate::tags::Type;
@@ -11,7 +11,7 @@ use crate::tags::{
 };
 use crate::ColorType;
 
-quick_error! {
+ai_quick_error! {
     /// Tiff error kinds.
     #[derive(Debug)]
     pub enum TiffError {
@@ -31,7 +31,6 @@ quick_error! {
         IoError(err: io::Error) {
             display("{err}")
             from()
-            source(err)
         }
         /// The Limits of the Decoder is exceeded.
         LimitsExceeded {
@@ -50,7 +49,7 @@ quick_error! {
     }
 }
 
-quick_error! {
+ai_quick_error! {
     /// The image is not formatted properly.
     ///
     /// This indicates that the encoder producing the image might behave incorrectly or that the
@@ -109,7 +108,7 @@ quick_error! {
     }
 }
 
-quick_error! {
+ai_quick_error! {
     /// The Decoder does not support features required by the image.
     ///
     /// This only captures known failures for which the standard either does not require support or an
@@ -169,7 +168,7 @@ quick_error! {
     }
 }
 
-quick_error! {
+ai_quick_error! {
     /// User attempted to use the Decoder in a way that is incompatible with a specific image.
     ///
     /// For example: attempting to read a tile from a stripped image.
@@ -230,8 +229,8 @@ impl From<string::FromUtf8Error> for TiffError {
     }
 }
 
-impl From<std::num::TryFromIntError> for TiffError {
-    fn from(_err: std::num::TryFromIntError) -> TiffError {
+impl From<core::num::TryFromIntError> for TiffError {
+    fn from(_err: core::num::TryFromIntError) -> TiffError {
         TiffError::IntSizeError
     }
 }

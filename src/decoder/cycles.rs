@@ -1,5 +1,5 @@
 use crate::{tags::IfdPointer, TiffError, TiffFormatError};
-use std::collections::HashMap;
+use alloc::collections::BTreeMap as HashMap;
 
 /// The IFD structure of a TIFF file should be limited to a forest of entries, and a tree when we
 /// only consider having a primary IFD and its children. There is up to one primary child of a node
@@ -19,7 +19,7 @@ pub struct IfdCycles {
     chains: HashMap<IfdPointer, ComponentId>,
 }
 
-#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash)]
+#[derive(Clone, Copy, Debug, PartialEq, Eq, PartialOrd, Ord, Hash)]
 struct ComponentId(u64);
 
 impl IfdCycles {

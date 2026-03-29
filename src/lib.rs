@@ -6,7 +6,12 @@
 //! # Related Links
 //! * <https://web.archive.org/web/20210108073850/https://www.adobe.io/open/standards/TIFF.html> - The TIFF specification
 
+#![cfg_attr(not(test), no_std)]
+
+extern crate alloc;
+
 mod bytecast;
+mod compat;
 pub mod decoder;
 mod directory;
 pub mod encoder;

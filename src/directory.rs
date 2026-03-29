@@ -1,5 +1,6 @@
 use core::fmt;
-use std::{collections::BTreeMap, num::NonZeroU64};
+use alloc::collections::BTreeMap;
+use core::num::NonZeroU64;
 
 use crate::{
     decoder::ifd::Entry,
@@ -95,10 +96,10 @@ impl Directory {
             let map_entry = self.entries.entry(tag.to_u16());
 
             match map_entry {
-                std::collections::btree_map::Entry::Vacant(vacant_entry) => {
+                alloc::collections::btree_map::Entry::Vacant(vacant_entry) => {
                     vacant_entry.insert(entry);
                 }
-                std::collections::btree_map::Entry::Occupied(mut occupied_entry) => {
+                alloc::collections::btree_map::Entry::Occupied(mut occupied_entry) => {
                     occupied_entry.insert(entry);
                 }
             }
@@ -108,7 +109,7 @@ impl Directory {
     pub(crate) fn encoded_len<K: crate::encoder::TiffKind>(&self) -> u64 {
         let (len_count, len_offset);
 
-        match std::mem::size_of::<K::OffsetType>() {
+        match core::mem::size_of::<K::OffsetType>() {
             offset @ 4 => {
                 // non-BigTiff uses a `u16` here.
                 len_count = 2;
@@ -129,7 +130,7 @@ impl Directory {
 }
 
 impl fmt::Debug for Directory {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+    fn fmt(&self, f: &mut core::fmt::Formatter<'_>) -> core::fmt::Result {
         f.debug_struct("Directory")
             .field(
                 "entries",

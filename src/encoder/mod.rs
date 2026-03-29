@@ -1,12 +1,13 @@
 pub use tiff_value::*;
 
-use std::{
+use alloc::{vec, vec::Vec};
+use core::{
     cmp,
-    io::{self, Seek, Write},
     marker::PhantomData,
     mem,
     num::{NonZeroU64, TryFromIntError},
 };
+use no_std_io::io::{self, Seek, Write};
 
 use crate::{
     decoder::ifd::Entry,
@@ -629,7 +630,7 @@ pub struct ImageEncoder<'a, W: 'a + Write + Seek, C: ColorType, K: TiffKind> {
     dropped: bool,
     compression: Compression,
     predictor: Predictor,
-    _phantom: ::std::marker::PhantomData<C>,
+    _phantom: ::core::marker::PhantomData<C>,
 }
 
 impl<'a, W: 'a + Write + Seek, T: ColorType, K: TiffKind> ImageEncoder<'a, W, T, K> {
@@ -711,7 +712,7 @@ impl<'a, W: 'a + Write + Seek, T: ColorType, K: TiffKind> ImageEncoder<'a, W, T,
             dropped: false,
             compression,
             predictor,
-            _phantom: ::std::marker::PhantomData,
+            _phantom: ::core::marker::PhantomData,
         })
     }
 
@@ -940,7 +941,7 @@ impl<'a, W: Write + Seek, C: ColorType, K: TiffKind> Drop for ImageEncoder<'a, W
 struct DirectoryEntry<'data, S> {
     data_type: Type,
     count: S,
-    data: std::borrow::Cow<'data, [u8]>,
+    data: alloc::borrow::Cow<'data, [u8]>,
 }
 
 /// Trait to abstract over Tiff/BigTiff differences.

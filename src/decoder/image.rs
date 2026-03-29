@@ -11,8 +11,9 @@ use crate::{
     ColorType, Directory, TiffError, TiffFormatError, TiffResult, TiffUnsupportedError, UsageError,
 };
 
-use std::io::{self, Cursor, Read, Seek};
-use std::sync::Arc;
+use alloc::{boxed::Box, vec, vec::Vec};
+use alloc::sync::Arc;
+use no_std_io::io::{Cursor, Read, Seek};
 
 #[derive(Debug)]
 pub(crate) struct StripDecodeState {
@@ -543,7 +544,16 @@ impl Image {
                 usize::try_from(compressed_length)?,
             )),
             #[cfg(feature = "zstd")]
-            CompressionMethod::ZSTD => Box::new(zstd::Decoder::new(reader)?),
+            CompressionMethod::ZSTD => {
+                let mut compressed = alloc::vec::Vec::new();
+                reader.take(compressed_length).read_to_end(&mut compressed)?;
+                let mut decoder = ruzstd::decoding::StreamingDecoder::new(&compressed[..])
+                    .map_err(|_e| io::Error::new(io::ErrorKind::InvalidData, "zstd decode init error"))?;
+                let mut output = Vec::new();
+                ruzstd::io::Read::read_to_end(&mut decoder, &mut output)
+                    .map_err(|_e| io::Error::new(io::ErrorKind::InvalidData, "zstd decode error"))?;
+                Box::new(Cursor::new(output))
+            }
             CompressionMethod::PackBits => Box::new(PackBitsReader::new(reader, compressed_length)),
             #[cfg(feature = "deflate")]
             CompressionMethod::Deflate | CompressionMethod::OldDeflate => {
@@ -978,8 +988,9 @@ impl Image {
                 reader.read_exact(&mut row[..used])?;
                 // Skip horizontal padding
                 if chunk_row_bytes > data_row_bytes {
-                    let len = u64::try_from(chunk_row_bytes - data_row_bytes)?;
-                    io::copy(&mut reader.by_ref().take(len), &mut io::sink())?;
+                    let skip_len = chunk_row_bytes - data_row_bytes;
+                    let mut skip_buf = vec![0u8; skip_len];
+                    reader.read_exact(&mut skip_buf)?;
                 }
 
                 super::fix_endianness_and_predict(
@@ -1045,7 +1056,7 @@ impl Image {
     fn compact_photometric_bytes(
         raw: &mut [u8],
         row: &mut [u8],
-        photo_range: &std::ops::Range<u32>,
+        photo_range: &core::ops::Range<u32>,
     ) {
         raw.chunks_exact_mut(photo_range.end as usize)
             .zip(row.chunks_exact_mut(photo_range.start as usize))

@@ -1,4 +1,5 @@
-use std::io::{Read, Seek};
+use alloc::vec::Vec;
+use no_std_io::io::{Read, Seek};
 
 use crate::{
     tags::{Tag, ValueBuffer},

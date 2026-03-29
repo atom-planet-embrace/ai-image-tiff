@@ -1,5 +1,5 @@
 use crate::tags::CompressionMethod;
-use std::io::{self, Write};
+use no_std_io::io::{self, Write};
 
 #[cfg(feature = "deflate")]
 mod deflate;

@@ -1,4 +1,6 @@
-use std::{borrow::Cow, io::Write, slice::from_ref};
+use alloc::{borrow::Cow, vec, vec::Vec};
+use no_std_io::io::Write;
+use core::slice::from_ref;
 
 use crate::{bytecast, tags, tags::Type, TiffError, TiffFormatError, TiffResult};
 

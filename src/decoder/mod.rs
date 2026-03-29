@@ -1,7 +1,8 @@
-use std::alloc::{Layout, LayoutError};
-use std::collections::BTreeMap;
-use std::io::{self, Read, Seek};
-use std::num::NonZeroUsize;
+use alloc::{string::String, vec, vec::Vec};
+use core::alloc::{Layout, LayoutError};
+use alloc::collections::BTreeMap;
+use no_std_io::io::{self, Read, Seek};
+use core::num::NonZeroUsize;
 
 use crate::tags::{
     CompressionMethod, IfdPointer, PhotometricInterpretation, PlanarConfiguration, Predictor,
