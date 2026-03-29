@@ -34,6 +34,8 @@ jobs:
 
   no_std:
     runs-on: ubuntu-latest
+    env:
+      RUSTFLAGS: "-D warnings"
     steps:
     - uses: actions/checkout@v2
     - uses: dtolnay/rust-toolchain@stable
@@ -50,7 +52,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        feature: ["", deflate, jpeg, lzw, zstd, default, "default,zstd", "default,std"]
+        feature: ["", deflate, fax, jpeg, lzw, webp, zstd, default, "default,zstd", "default,std"]
     steps:
     - uses: actions/checkout@v2
     - uses: dtolnay/rust-toolchain@stable
