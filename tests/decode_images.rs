@@ -1,4 +1,4 @@
-extern crate tiff;
+extern crate ai_tiff as tiff;
 
 use tiff::decoder::{ifd, Decoder, DecodingResult};
 use tiff::ColorType;

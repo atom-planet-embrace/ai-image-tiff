@@ -1,7 +1,9 @@
+This is a fork of the [tiff](https://crates.io/crates/tiff) crate. The git repository is located at https://github.com/image-rs/image-tiff/.
+
 # image-tiff
-[![Build Status](https://github.com/image-rs/image-tiff/actions/workflows/rust.yml/badge.svg?branch=main)](https://github.com/image-rs/image-tiff/actions)
-[![Documentation](https://docs.rs/tiff/badge.svg)](https://docs.rs/tiff)
-[![Further crate info](https://img.shields.io/crates/v/tiff.svg)](https://crates.io/crates/tiff)
+[![Build Status](https://github.com/atom-planet-embrace/ai-image-tiff/actions/workflows/rust.yml/badge.svg?branch=main)](https://github.com/atom-planet-embrace/ai-image-tiff/actions)
+[![Documentation](https://docs.rs/ai-tiff/badge.svg)](https://docs.rs/ai-tiff)
+[![Further crate info](https://img.shields.io/crates/v/ai-tiff.svg)](https://crates.io/crates/ai-tiff)
 
 TIFF decoding and encoding library in pure Rust
 

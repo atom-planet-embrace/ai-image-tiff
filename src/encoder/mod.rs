@@ -85,7 +85,7 @@ impl Compression {
 ///
 /// # Examples
 /// ```
-/// # extern crate tiff;
+/// # extern crate ai_tiff as tiff;
 /// # fn main() {
 /// # let mut file = std::io::Cursor::new(Vec::new());
 /// # let image_data = vec![0; 100*100*3];
@@ -590,7 +590,7 @@ impl<'a, W: Write + Seek, K: TiffKind> Drop for DirectoryEncoder<'a, W, K> {
 ///
 /// # Examples
 /// ```
-/// # extern crate tiff;
+/// # extern crate ai_tiff as tiff;
 /// # fn main() {
 /// # let mut file = std::io::Cursor::new(Vec::new());
 /// # let image_data = vec![0; 100*100*3];

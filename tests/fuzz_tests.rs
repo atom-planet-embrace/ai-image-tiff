@@ -1,4 +1,4 @@
-extern crate tiff;
+extern crate ai_tiff as tiff;
 
 use tiff::decoder::Decoder;
 use tiff::TiffResult;
@@ -41,7 +41,7 @@ fn inf_loop() {
     });
 }
 
-// https://github.com/image-rs/image-tiff/issues/33
+// https://github.com/atom-planet-embrace/ai-image-tiff/issues/33
 #[test]
 fn divide_by_zero() {
     test_directory("./tests/fuzz_images/divide_by_zero", |file| {

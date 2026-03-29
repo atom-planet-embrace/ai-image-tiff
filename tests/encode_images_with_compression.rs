@@ -1,4 +1,4 @@
-extern crate tiff;
+extern crate ai_tiff as tiff;
 
 use std::io::{Cursor, Seek, Write};
 use tiff::{

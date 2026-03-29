@@ -1,5 +1,5 @@
 [package]
-name = "tiff"
+name = "ai-tiff"
 version = "0.11.3"
 edition = "2021"
 resolver = "2"
@@ -8,10 +8,10 @@ resolver = "2"
 rust-version = "1.85.0"
 
 license = "MIT"
-description = "TIFF decoding and encoding library in pure Rust"
+description = "A no_std fork of tiff"
 authors = ["The image-rs Developers"]
 
-repository = "https://github.com/image-rs/image-tiff"
+repository = "https://github.com/atom-planet-embrace/ai-image-tiff"
 categories = ["multimedia::images", "multimedia::encoding"]
 
 exclude = ["tests/images/*", "tests/fuzz_images/*", "tests/**/*.tif"]
