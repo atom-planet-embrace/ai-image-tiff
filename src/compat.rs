@@ -12,6 +12,7 @@ pub struct BufReader<R> {
     filled: usize,
 }
 
+#[allow(dead_code)]
 impl<R: Read> BufReader<R> {
     pub fn new(inner: R) -> Self {
         Self::with_capacity(8192, inner)

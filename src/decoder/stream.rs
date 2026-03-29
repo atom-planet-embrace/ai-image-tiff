@@ -1,8 +1,12 @@
 //! All IO functionality needed for TIFF decoding
+#[cfg(any(feature = "fax", feature = "webp", test))]
 use alloc::vec::Vec;
 #[cfg(feature = "webp")]
 use no_std_io::io::Cursor;
-use no_std_io::io::{self, BufRead, Read, Seek, Take};
+use no_std_io::io::{self, Read, Seek, Take};
+#[cfg(feature = "lzw")]
+use no_std_io::io::BufRead;
+#[cfg(any(feature = "lzw", feature = "fax", feature = "webp"))]
 use crate::compat::BufReader;
 
 pub use crate::tags::ByteOrder;

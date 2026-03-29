@@ -13,7 +13,9 @@ use crate::{
 
 use alloc::{boxed::Box, vec, vec::Vec};
 use alloc::sync::Arc;
-use no_std_io::io::{Cursor, Read, Seek};
+#[cfg(any(feature = "zstd", feature = "jpeg"))]
+use no_std_io::io::Cursor;
+use no_std_io::io::{Read, Seek};
 
 #[derive(Debug)]
 pub(crate) struct StripDecodeState {

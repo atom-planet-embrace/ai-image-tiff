@@ -1,4 +1,6 @@
-use alloc::{string, string::String, string::ToString, vec::Vec};
+use alloc::{string, string::String, vec::Vec};
+#[cfg(any(feature = "lzw", feature = "jpeg"))]
+use alloc::string::ToString;
 use no_std_io::io;
 use core::str;
 
