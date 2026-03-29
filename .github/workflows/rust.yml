@@ -30,13 +30,27 @@ jobs:
       run: cargo build -v
     - name: test
       if: ${{ matrix.rust != '1.85.0' }}
-      run: cargo test -v && cargo doc -v
+      run: cargo test --features std -v && cargo doc -v
+
+  no_std:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v2
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: thumbv7m-none-eabi
+    - name: Build no_std (no default features)
+      run: cargo build --target thumbv7m-none-eabi --no-default-features
+    - name: Build no_std (default features)
+      run: cargo build --target thumbv7m-none-eabi
+    - name: Check default features
+      run: cargo check
 
   features:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        feature: ["", deflate, jpeg, lzw, zstd, default, "default,zstd"]
+        feature: ["", deflate, jpeg, lzw, zstd, default, "default,zstd", "default,std"]
     steps:
     - uses: actions/checkout@v2
     - uses: dtolnay/rust-toolchain@stable
@@ -72,7 +86,7 @@ jobs:
       - name: Start Docker (required for cross-rs)
         run: sudo systemctl start docker
       - name: Cross-Run Tests using QEMU
-        run: cross test --target ${{ matrix.arch }}
+        run: cross test --features std --target ${{ matrix.arch }}
 
   rustfmt:
     runs-on: ubuntu-latest
