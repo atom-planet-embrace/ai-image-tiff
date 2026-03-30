@@ -1,6 +1,6 @@
+use crate::compat::BufWriter;
 use crate::encoder::compression::*;
 use no_std_io::io::{Error, ErrorKind};
-use crate::compat::BufWriter;
 
 /// Compressor that uses the Packbits[^note] algorithm to compress bytes.
 ///

@@ -1,10 +1,14 @@
 //! Function for reading TIFF tags
 
-use alloc::{string::{String, ToString}, vec, vec::Vec};
 use alloc::collections::BTreeMap as HashMap;
-use no_std_io::io::{self, Read, Seek};
+use alloc::{
+    string::{String, ToString},
+    vec,
+    vec::Vec,
+};
 use core::mem;
 use core::str;
+use no_std_io::io::{self, Read, Seek};
 
 use super::stream::{ByteOrder, EndianReader};
 use crate::tags::{IfdPointer, Tag, Type, ValueBuffer};
@@ -364,7 +368,9 @@ impl ::core::fmt::Debug for Entry {
     fn fmt(&self, fmt: &mut ::core::fmt::Formatter) -> Result<(), ::core::fmt::Error> {
         fmt.write_str(&alloc::format!(
             "Entry {{ type_: {:?}, count: {:?}, offset: {:?} }}",
-            self.type_, self.count, &self.offset
+            self.type_,
+            self.count,
+            &self.offset
         ))
     }
 }

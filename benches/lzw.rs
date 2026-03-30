@@ -1,5 +1,5 @@
-extern crate criterion;
 extern crate ai_tiff as tiff;
+extern crate criterion;
 
 use criterion::{
     black_box, measurement::Measurement, BenchmarkGroup, BenchmarkId, Criterion, Throughput,

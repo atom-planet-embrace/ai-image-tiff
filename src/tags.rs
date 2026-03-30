@@ -1,5 +1,5 @@
-use alloc::{vec, vec::Vec};
 use crate::encoder::TiffValue;
+use alloc::{vec, vec::Vec};
 use core::fmt;
 
 macro_rules! tags {

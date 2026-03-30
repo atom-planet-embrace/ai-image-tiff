@@ -1,15 +1,15 @@
 //! All IO functionality needed for TIFF decoding
-#[cfg(any(feature = "fax", feature = "webp", test))]
-use alloc::vec::Vec;
+#[cfg(any(feature = "lzw", feature = "fax"))]
+use crate::compat::BufReader;
 #[cfg(any(feature = "webp", test))]
 use alloc::vec;
+#[cfg(any(feature = "fax", feature = "webp", test))]
+use alloc::vec::Vec;
+#[cfg(feature = "lzw")]
+use no_std_io::io::BufRead;
 #[cfg(feature = "webp")]
 use no_std_io::io::Cursor;
 use no_std_io::io::{self, Read, Seek, Take};
-#[cfg(feature = "lzw")]
-use no_std_io::io::BufRead;
-#[cfg(any(feature = "lzw", feature = "fax"))]
-use crate::compat::BufReader;
 
 pub use crate::tags::ByteOrder;
 
@@ -186,7 +186,12 @@ impl<R: Read> Read for LZWReader<R> {
                 Ok(weezl::LzwStatus::Done) => {
                     return Ok(result.consumed_out);
                 }
-                Err(_err) => return Err(io::Error::new(io::ErrorKind::InvalidData, "lzw decode error")),
+                Err(_err) => {
+                    return Err(io::Error::new(
+                        io::ErrorKind::InvalidData,
+                        "lzw decode error",
+                    ))
+                }
             }
         }
     }
@@ -304,7 +309,9 @@ impl<R: Read> Read for Group4Reader<R> {
             && self.y < self.height
         {
             #[allow(clippy::io_other_error)]
-            let next = self.decoder.advance().map_err(|_e| no_std_io::io::Error::new(no_std_io::io::ErrorKind::Other, "fax decode error"))?;
+            let next = self.decoder.advance().map_err(|_e| {
+                no_std_io::io::Error::new(no_std_io::io::ErrorKind::Other, "fax decode error")
+            })?;
 
             match next {
                 fax34::decoder::DecodeStatus::End => (),
@@ -378,10 +385,11 @@ impl WebPReader {
         samples: u16,
     ) -> crate::TiffResult<Self> {
         let mut compressed = Vec::new();
-        reader.take(compressed_length).read_to_end(&mut compressed)?;
-        let mut decoder =
-            image_webp::WebPDecoder::new(Cursor::new(compressed))
-                .map_err(|_e| io::Error::new(io::ErrorKind::InvalidData, "webp decode error"))?;
+        reader
+            .take(compressed_length)
+            .read_to_end(&mut compressed)?;
+        let mut decoder = image_webp::WebPDecoder::new(Cursor::new(compressed))
+            .map_err(|_e| io::Error::new(io::ErrorKind::InvalidData, "webp decode error"))?;
 
         if !(samples == 4 || (samples == 3 && !decoder.has_alpha())) {
             return Err(io::Error::new(

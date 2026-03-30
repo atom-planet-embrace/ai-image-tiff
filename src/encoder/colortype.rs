@@ -1,5 +1,5 @@
-use alloc::vec::Vec;
 use crate::tags::{PhotometricInterpretation, SampleFormat};
+use alloc::vec::Vec;
 
 macro_rules! integer_horizontal_predict {
     () => {

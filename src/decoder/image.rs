@@ -11,8 +11,8 @@ use crate::{
     ColorType, Directory, TiffError, TiffFormatError, TiffResult, TiffUnsupportedError, UsageError,
 };
 
-use alloc::{boxed::Box, vec, vec::Vec};
 use alloc::sync::Arc;
+use alloc::{boxed::Box, vec, vec::Vec};
 #[cfg(any(feature = "zstd", feature = "jpeg"))]
 use no_std_io::io::Cursor;
 use no_std_io::io::{Read, Seek};
@@ -548,13 +548,25 @@ impl Image {
             #[cfg(feature = "zstd")]
             CompressionMethod::ZSTD => {
                 let mut compressed = alloc::vec::Vec::new();
-                reader.take(compressed_length).read_to_end(&mut compressed)?;
+                reader
+                    .take(compressed_length)
+                    .read_to_end(&mut compressed)?;
                 let mut source = &compressed[..];
                 let mut decoder = ruzstd::FrameDecoder::new();
-                decoder.reset(&mut source)
-                    .map_err(|_e| no_std_io::io::Error::new(no_std_io::io::ErrorKind::InvalidData, "zstd decode init error"))?;
-                decoder.decode_blocks(&mut source, ruzstd::BlockDecodingStrategy::All)
-                    .map_err(|_e| no_std_io::io::Error::new(no_std_io::io::ErrorKind::InvalidData, "zstd decode error"))?;
+                decoder.reset(&mut source).map_err(|_e| {
+                    no_std_io::io::Error::new(
+                        no_std_io::io::ErrorKind::InvalidData,
+                        "zstd decode init error",
+                    )
+                })?;
+                decoder
+                    .decode_blocks(&mut source, ruzstd::BlockDecodingStrategy::All)
+                    .map_err(|_e| {
+                        no_std_io::io::Error::new(
+                            no_std_io::io::ErrorKind::InvalidData,
+                            "zstd decode error",
+                        )
+                    })?;
                 let output = decoder.collect().unwrap_or_default();
                 Box::new(Cursor::new(output))
             }

@@ -1,5 +1,5 @@
-use core::fmt;
 use alloc::collections::BTreeMap;
+use core::fmt;
 use core::num::NonZeroU64;
 
 use crate::{
