@@ -22,9 +22,9 @@ quick-error = { package = "ai-quick-error", version = "2.0.1" }
 no_std_io = { version = "0.6", default-features = false, features = ["alloc"] }
 
 # Rename to avoid confusion with the feature name.
-fax34 = { package = "ai-fax", git = "https://github.com/atom-planet-embrace/ai-fax", default-features = false, optional = true }
+fax34 = { package = "ai-fax", version = "0.2.6", default-features = false, optional = true }
 flate2 = { package = "ai-flate2", version = "1.0.20", default-features = false, features = ["rust_backend"], optional = true }
-weezl = { package = "ai-weezl", git = "https://github.com/atom-planet-embrace/ai-weezl", default-features = false, optional = true }
+weezl = { package = "ai-weezl", version = "0.1.12", default-features = false, optional = true }
 ruzstd = { version = "0.7", default-features = false, optional = true }
 zune-jpeg = { version = "0.5.1", default-features = false, optional = true }
 image-webp = { package = "ai-image-webp", version = "0.2.4", optional = true }
