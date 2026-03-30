@@ -81,35 +81,6 @@ impl<W: Write> BufWriter<W> {
     }
 }
 
-/// A sink that discards all data written to it.
-pub struct Sink;
-
-impl Write for Sink {
-    fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
-        Ok(buf.len())
-    }
-
-    fn flush(&mut self) -> io::Result<()> {
-        Ok(())
-    }
-}
-
-/// Copy all bytes from reader to writer, returning the number of bytes copied.
-#[allow(dead_code)]
-pub fn copy<R: Read, W: Write>(reader: &mut R, writer: &mut W) -> io::Result<u64> {
-    let mut buf = vec![0u8; 8192];
-    let mut total = 0u64;
-    loop {
-        let n = reader.read(&mut buf)?;
-        if n == 0 {
-            break;
-        }
-        writer.write_all(&buf[..n])?;
-        total += n as u64;
-    }
-    Ok(total)
-}
-
 impl<W: Write> Write for BufWriter<W> {
     fn write(&mut self, buf: &[u8]) -> io::Result<usize> {
         self.buf.extend_from_slice(buf);
