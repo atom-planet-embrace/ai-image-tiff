@@ -17,7 +17,7 @@ fn read_all_planes() {
     assert_eq!(layout.planes, 3);
     let plane_stride = layout.plane_stride.map_or(0, |x| x.get());
 
-    eprintln!("{:?}", layout);
+    eprintln!("{layout:?}");
     let mut buffer = vec![0u8; layout.complete_len];
     tif.read_image_bytes(&mut buffer).unwrap();
 
@@ -43,7 +43,7 @@ fn read_first_coding_unit() {
 
     assert_eq!(layout.planes, 3);
     let plane_stride = layout.plane_stride.map_or(0, |x| x.get());
-    eprintln!("{:?}", layout);
+    eprintln!("{layout:?}");
     let mut buffer = vec![0u8; layout.complete_len];
 
     struct Expected {

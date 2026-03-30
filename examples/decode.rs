@@ -45,7 +45,7 @@ fn debug_planes(
         ai_tiff::ColorType::CMYK(_) => (4, "CMYK"),
         ai_tiff::ColorType::Multiband { num_samples: 2, .. } => (2, "GRAYSCALE_ALPHA"),
         _ => {
-            eprintln!("Unsupported color type for PAM output: {:?}", colortype);
+            eprintln!("Unsupported color type for PAM output: {colortype:?}");
             return;
         }
     };

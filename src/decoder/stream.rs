@@ -303,6 +303,7 @@ impl<R: Read> Read for Group4Reader<R> {
         if self.line_buf.position() as usize == self.line_buf.get_ref().len()
             && self.y < self.height
         {
+            #[allow(clippy::io_other_error)]
             let next = self.decoder.advance().map_err(|_e| no_std_io::io::Error::new(no_std_io::io::ErrorKind::Other, "fax decode error"))?;
 
             match next {
